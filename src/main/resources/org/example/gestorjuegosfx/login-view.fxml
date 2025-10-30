@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane prefHeight="240.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestorjuegosfx.LoginController">
    <center>
       <VBox alignment="CENTER" spacing="20.0">
@@ -38,8 +37,8 @@
                <children>
                   <Label text="Correo" />
                   <Label text="Contraseña" GridPane.rowIndex="1" />
-                  <TextField fx:id="txtCorreo" GridPane.columnIndex="1" />
-                  <PasswordField fx:id="txtContraseña" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtCorreo" text="F" GridPane.columnIndex="1" />
+                  <PasswordField fx:id="txtContraseña" text="F" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             <FlowPane alignment="CENTER" hgap="10.0">

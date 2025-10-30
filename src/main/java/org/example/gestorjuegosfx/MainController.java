@@ -1,5 +1,6 @@
 package org.example.gestorjuegosfx;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
@@ -8,9 +9,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,19 +25,65 @@ public class MainController implements Initializable {
 
     private Stage stage;
     @javafx.fxml.FXML
-    private ChoiceBox<String> choice;
+    private ChoiceBox<User> choice;
 
-    private ObservableList<String> datos = FXCollections.observableArrayList();
+    @javafx.fxml.FXML
+    private ListView<User> lista;
+    @javafx.fxml.FXML
+    private TableColumn<User,String> cEmail;
+    @javafx.fxml.FXML
+    private TableColumn<User,String> cContraseña;
+    @javafx.fxml.FXML
+    private TableView<User> tabla;
 
     public void setStage(Stage stage){
         this.stage=stage;
     }
 
+    private ObservableList<User> datos = FXCollections.observableArrayList();
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        datos.addAll("Hola","Adios");
+
+        choice.setConverter(new StringConverter<User>() {
+            @Override
+            public String toString(User user) {
+                return user.getEmail().toUpperCase();
+            }
+
+            @Override
+            public User fromString(String s) {
+                return null;
+            }
+        });
+
+        datos.add( new User("fr@cesur.com","1234",true) );
+        datos.add( new User("ana@cesur.com", "abcd", true) );
+        datos.add( new User("luis@cesur.com", "pass123", false) );
+        datos.add( new User("maria@cesur.com", "qwerty", true) );
+        datos.add( new User("jose@cesur.com", "admin", false) );
+        datos.add( new User("carmen@cesur.com", "cesur2025", true) );
         choice.setItems(datos);
+
+        lista.setItems(datos);
+        lista.setCellFactory( (_)-> new ListCell<>(){
+            @Override
+            public void updateItem(User item, boolean empty){
+                super.updateItem(item, empty);
+                if(!empty) setText(item.getEmail());
+            }
+        });
+
+        cEmail.setCellValueFactory( (cell)->{
+            return new SimpleStringProperty("("+cell.getValue().getEmail()+")");
+        });
+        cContraseña.setCellValueFactory( (cell)->{
+            return new SimpleStringProperty("Password: "+cell.getValue().getPassword());
+        });
+
+        tabla.setItems(datos);
 
         //choice.getItems().addAll("A","B","C","D","E","F","G","H");
         choice.setValue( choice.getItems().getFirst() );
@@ -43,9 +91,8 @@ public class MainController implements Initializable {
 
     @javafx.fxml.FXML
     public void salir(ActionEvent actionEvent) {
-        datos.add("Saliendo");
 
-/*    try {
+    try {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("login-view.fxml"));
         Parent root = loader.load();
@@ -61,6 +108,6 @@ public class MainController implements Initializable {
     } catch (IOException e) {
         throw new RuntimeException(e);
     }
-*/
+
     }
 }
