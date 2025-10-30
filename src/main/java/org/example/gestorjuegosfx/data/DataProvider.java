@@ -3,6 +3,7 @@ package org.example.gestorjuegosfx.data;
 import com.mysql.cj.jdbc.MysqlDataSource;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 
 public class DataProvider {
 
@@ -10,17 +11,21 @@ public class DataProvider {
 
     private DataProvider() {}
 
-    public static DataSource getDataSource(String url, String user, String password) {
+    public static DataSource getDataSource() {
         if(dataSource == null) {
             var ds = new MysqlDataSource();
-            ds.setURL(url);
-            ds.setUser(user);
-            ds.setPassword(password);
+            ds.setURL("jdbc:mysql://localhost:3306/ad");
+            ds.setUser("root");
+            ds.setPassword("pass");
+            try {
+                ds.setAllowMultiQueries(true); // es necesario para DataInitializer
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             dataSource = ds;
+
+            DataInitializer.initializeTables();
         }
-        return dataSource;
-    }
-    public static DataSource getDataSource() {
         return dataSource;
     }
 

@@ -36,11 +36,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        DataSource ds = DataProvider.getDataSource(
-                "jdbc:mysql://localhost:3306/ad",
-                "root",
-                "root"
-        );
+        DataSource ds = DataProvider.getDataSource();
         userDAO = new UserDAO(ds);
 
     }
@@ -68,7 +64,7 @@ public class LoginController implements Initializable {
             alert.showAndWait();
 
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("../main-view.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/gestorjuegosfx/main-view.fxml"));
                 Parent root = loader.load();
                 MainController controller = loader.getController();
                 controller.setStage(stage);
