@@ -1,8 +1,7 @@
-package org.example.gestorjuegosfx;
+package org.example.gestorjuegosfx.controllers;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -11,8 +10,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.example.gestorjuegosfx.user.User;
 
 import java.io.IOException;
 import java.net.URL;
@@ -59,12 +58,12 @@ public class MainController implements Initializable {
             }
         });
 
-        datos.add( new User("fr@cesur.com","1234",true) );
-        datos.add( new User("ana@cesur.com", "abcd", true) );
-        datos.add( new User("luis@cesur.com", "pass123", false) );
-        datos.add( new User("maria@cesur.com", "qwerty", true) );
-        datos.add( new User("jose@cesur.com", "admin", false) );
-        datos.add( new User("carmen@cesur.com", "cesur2025", true) );
+        datos.add( new User(1,"fr@cesur.com","1234",true) );
+        datos.add( new User(2,"ana@cesur.com", "abcd", true) );
+        datos.add( new User(3,"luis@cesur.com", "pass123", false) );
+        datos.add( new User(4,"maria@cesur.com", "qwerty", true) );
+        datos.add( new User(5,"jose@cesur.com", "admin", false) );
+        datos.add( new User(6,"carmen@cesur.com", "cesur2025", true) );
         choice.setItems(datos);
 
         lista.setItems(datos);

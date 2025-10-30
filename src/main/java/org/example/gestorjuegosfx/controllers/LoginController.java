@@ -1,16 +1,22 @@
-package org.example.gestorjuegosfx;
+package org.example.gestorjuegosfx.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.example.gestorjuegosfx.data.DataProvider;
+import org.example.gestorjuegosfx.user.UserDAO;
 
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class LoginController {
+public class LoginController implements Initializable {
 
     @FXML
     private PasswordField txtContraseña;
@@ -25,6 +31,21 @@ public class LoginController {
 
     private Stage stage;
 
+    private UserDAO userDAO;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        DataSource ds = DataProvider.getDataSource(
+                "jdbc:mysql://localhost:3306/ad",
+                "root",
+                "root"
+        );
+        userDAO = new UserDAO(ds);
+
+    }
+
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -36,7 +57,9 @@ public class LoginController {
 
     @FXML
     public void continuar(ActionEvent actionEvent) {
-        if( txtCorreo.getText().equals("F") && txtContraseña.getText().equals("F") ) {
+
+        var userOpt = userDAO.findByEmailAndPassword(txtCorreo.getText(),txtContraseña.getText());
+        if( userOpt.isPresent() ) {
             lblInfo.setText("Acceso correcto");
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Bienvenido");
@@ -45,7 +68,7 @@ public class LoginController {
             alert.showAndWait();
 
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("main-view.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../main-view.fxml"));
                 Parent root = loader.load();
                 MainController controller = loader.getController();
                 controller.setStage(stage);
