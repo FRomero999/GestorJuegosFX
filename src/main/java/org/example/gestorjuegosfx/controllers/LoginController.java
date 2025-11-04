@@ -8,6 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.example.gestorjuegosfx.AuthService;
+import org.example.gestorjuegosfx.JavaFXUtil;
 import org.example.gestorjuegosfx.data.DataProvider;
 import org.example.gestorjuegosfx.user.UserDAO;
 
@@ -32,13 +34,13 @@ public class LoginController implements Initializable {
     private Stage stage;
 
     private UserDAO userDAO;
+    private AuthService authService;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         DataSource ds = DataProvider.getDataSource();
         userDAO = new UserDAO(ds);
-
+        authService = new AuthService(userDAO);
     }
 
 
@@ -54,30 +56,11 @@ public class LoginController implements Initializable {
     @FXML
     public void continuar(ActionEvent actionEvent) {
 
-        var userOpt = userDAO.findByEmailAndPassword(txtCorreo.getText(),txtContraseña.getText());
-        if( userOpt.isPresent() ) {
+        if(authService.login(txtCorreo.getText(),txtContraseña.getText()).isPresent()){
             lblInfo.setText("Acceso correcto");
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Bienvenido");
-            alert.setHeaderText(null);
-            alert.setContentText("Bienvenido");
-            alert.showAndWait();
-
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/gestorjuegosfx/main-view.fxml"));
-                Parent root = loader.load();
-                MainController controller = loader.getController();
-                controller.setStage(stage);
-
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.centerOnScreen();
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-
+            JavaFXUtil.showModal(Alert.AlertType.INFORMATION,"Bienvenido",null,"Bienvenido a la aplicación");
+            MainController mainController = JavaFXUtil.setScene("/org/example/gestorjuegosfx/main-view.fxml");
+            mainController.setStage(stage);
         } else{
             lblInfo.setText("Error en el acceso");
             txtCorreo.clear();

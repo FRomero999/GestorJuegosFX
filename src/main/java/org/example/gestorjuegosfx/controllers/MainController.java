@@ -11,8 +11,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.example.gestorjuegosfx.AuthService;
+import org.example.gestorjuegosfx.data.DataProvider;
 import org.example.gestorjuegosfx.user.User;
+import org.example.gestorjuegosfx.user.UserDAO;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,6 +39,9 @@ public class MainController implements Initializable {
     @javafx.fxml.FXML
     private TableView<User> tabla;
 
+    private UserDAO userDAO;
+    private AuthService authService;
+
     public void setStage(Stage stage){
         this.stage=stage;
     }
@@ -45,6 +52,11 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        DataSource ds = DataProvider.getDataSource();
+        userDAO = new UserDAO(ds);
+        authService = new AuthService(userDAO);
+
+        authService.getCurrentUser().ifPresent(System.out::println);
 
         choice.setConverter(new StringConverter<User>() {
             @Override
