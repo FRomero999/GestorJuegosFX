@@ -1,4 +1,4 @@
-package org.example.gestorjuegosfx.data;
+package org.example.gestorjuegosfx.common;
 
 import java.util.List;
 import java.util.Optional;

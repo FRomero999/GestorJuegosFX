@@ -1,4 +1,4 @@
-package org.example.gestorjuegosfx;
+package org.example.gestorjuegosfx.utils;
 
 import org.example.gestorjuegosfx.user.User;
 import org.example.gestorjuegosfx.user.UserDAO;

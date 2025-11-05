@@ -1,4 +1,4 @@
-package org.example.gestorjuegosfx.data;
+package org.example.gestorjuegosfx.common;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 

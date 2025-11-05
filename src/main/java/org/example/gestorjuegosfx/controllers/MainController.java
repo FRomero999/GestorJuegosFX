@@ -11,10 +11,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import org.example.gestorjuegosfx.AuthService;
-import org.example.gestorjuegosfx.data.DataProvider;
+import org.example.gestorjuegosfx.game.Game;
+import org.example.gestorjuegosfx.game.GameDAO;
+import org.example.gestorjuegosfx.utils.AuthService;
+import org.example.gestorjuegosfx.common.DataProvider;
 import org.example.gestorjuegosfx.user.User;
 import org.example.gestorjuegosfx.user.UserDAO;
+import org.example.gestorjuegosfx.utils.JavaFXUtil;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -27,98 +30,103 @@ public class MainController implements Initializable {
     private Button btnSalir;
 
     private Stage stage;
-    @javafx.fxml.FXML
-    private ChoiceBox<User> choice;
 
-    @javafx.fxml.FXML
-    private ListView<User> lista;
-    @javafx.fxml.FXML
-    private TableColumn<User,String> cEmail;
-    @javafx.fxml.FXML
-    private TableColumn<User,String> cContraseña;
-    @javafx.fxml.FXML
-    private TableView<User> tabla;
-
+    private GameDAO gameDAO;
     private UserDAO userDAO;
     private AuthService authService;
+    private User currentUser;
 
-    public void setStage(Stage stage){
-        this.stage=stage;
-    }
+    @javafx.fxml.FXML
+    private TextArea txtDescription;
+    @javafx.fxml.FXML
+    private Spinner<Integer> spinUser;
+    @javafx.fxml.FXML
+    private TextField txtPlataforma;
+    @javafx.fxml.FXML
+    private Label lblId;
+    @javafx.fxml.FXML
+    private TableColumn<Game,String> cTitle;
+    @javafx.fxml.FXML
+    private TextField txtImage;
+    @javafx.fxml.FXML
+    private TableColumn<Game,String> cPlatform;
+    @javafx.fxml.FXML
+    private Spinner<Integer> spinYear;
+    @javafx.fxml.FXML
+    private Button btnAñadir;
+    @javafx.fxml.FXML
+    private TableView<Game> table;
+    @javafx.fxml.FXML
+    private TableColumn<Game,String> cId;
+    @javafx.fxml.FXML
+    private TextField txtTitle;
 
     private ObservableList<User> datos = FXCollections.observableArrayList();
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         DataSource ds = DataProvider.getDataSource();
+        gameDAO = new GameDAO(ds);
         userDAO = new UserDAO(ds);
         authService = new AuthService(userDAO);
+        currentUser = authService.getCurrentUser().get();
 
         authService.getCurrentUser().ifPresent(System.out::println);
 
-        choice.setConverter(new StringConverter<User>() {
-            @Override
-            public String toString(User user) {
-                return user.getEmail().toUpperCase();
-            }
-
-            @Override
-            public User fromString(String s) {
-                return null;
-            }
+        cId.setCellValueFactory( (row)->{
+            return new SimpleStringProperty(row.getValue().getId().toString());
+        });
+        cTitle.setCellValueFactory( (row)->{
+            return new SimpleStringProperty(row.getValue().getTitle());
+        });
+        cPlatform.setCellValueFactory( (row)->{
+            return new SimpleStringProperty(row.getValue().getPlatform());
         });
 
-        datos.add( new User(1,"fr@cesur.com","1234",true) );
-        datos.add( new User(2,"ana@cesur.com", "abcd", true) );
-        datos.add( new User(3,"luis@cesur.com", "pass123", false) );
-        datos.add( new User(4,"maria@cesur.com", "qwerty", true) );
-        datos.add( new User(5,"jose@cesur.com", "admin", false) );
-        datos.add( new User(6,"carmen@cesur.com", "cesur2025", true) );
-        choice.setItems(datos);
+        spinUser.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 3));
+        spinYear.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1970, 2025,2025,1));
 
-        lista.setItems(datos);
-        lista.setCellFactory( (_)-> new ListCell<>(){
-            @Override
-            public void updateItem(User item, boolean empty){
-                super.updateItem(item, empty);
-                if(!empty) setText(item.getEmail());
-            }
+        table.getSelectionModel().selectedItemProperty().addListener((observable,oldValue,newValue)->{
+           if(newValue!=null){
+               txtTitle.setText(newValue.getTitle());
+               txtDescription.setText(newValue.getDescription());
+               lblId.setText(newValue.getId().toString());
+               txtPlataforma.setText(newValue.getPlatform());
+               txtImage.setText(newValue.getImage_url());
+               spinUser.getValueFactory().setValue(newValue.getUser_id());
+               spinYear.getValueFactory().setValue(newValue.getYear());
+           }
         });
 
-        cEmail.setCellValueFactory( (cell)->{
-            return new SimpleStringProperty("("+cell.getValue().getEmail()+")");
-        });
-        cContraseña.setCellValueFactory( (cell)->{
-            return new SimpleStringProperty("Password: "+cell.getValue().getPassword());
-        });
+        refreshTable();
 
-        tabla.setItems(datos);
+    }
 
-        //choice.getItems().addAll("A","B","C","D","E","F","G","H");
-        choice.setValue( choice.getItems().getFirst() );
+    private void refreshTable() {
+        table.getItems().clear();
+        table.getItems().addAll( gameDAO.findAllByUserId( currentUser.getId()) );
     }
 
     @javafx.fxml.FXML
     public void salir(ActionEvent actionEvent) {
-
-    try {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("login-view.fxml"));
-        Parent root = loader.load();
-        LoginController controller = loader.getController();
-        controller.setStage(stage);
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.show();
-
-
-
-    } catch (IOException e) {
-        throw new RuntimeException(e);
+        authService.logout();
+        JavaFXUtil.setScene("org/example/gestorjuegosfx/login-view.fxml");
     }
 
+    @javafx.fxml.FXML
+    public void añadir(ActionEvent actionEvent) {
+        Game game = new Game();
+        game.setTitle(txtTitle.getText());
+        game.setDescription(txtDescription.getText());
+        game.setYear(spinYear.getValue());
+        game.setUser_id(spinUser.getValue());
+        game.setPlatform(txtPlataforma.getText());
+
+        var newGame = gameDAO.save(game);
+        if(newGame.isPresent()){
+            refreshTable();
+            JavaFXUtil.showModal(Alert.AlertType.INFORMATION,"Añadido",null,"Se ha añadido "+game.getTitle());
+        }
     }
 }

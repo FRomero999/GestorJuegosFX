@@ -1,11 +1,10 @@
-package org.example.gestorjuegosfx;
+package org.example.gestorjuegosfx.utils;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import org.example.gestorjuegosfx.controllers.MainController;
 
 import java.io.IOException;
 

@@ -1,7 +1,4 @@
-package org.example.gestorjuegosfx.data;
-
-import org.example.gestorjuegosfx.user.User;
-import org.example.gestorjuegosfx.user.UserDAO;
+package org.example.gestorjuegosfx.common;
 
 import javax.sql.DataSource;
 import java.io.IOException;

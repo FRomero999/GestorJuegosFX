@@ -13,6 +13,8 @@ module org.example.gestorjuegosfx {
     opens org.example.gestorjuegosfx.user to javafx.fxml;
     exports org.example.gestorjuegosfx.controllers;
     opens org.example.gestorjuegosfx.controllers to javafx.fxml;
-    exports org.example.gestorjuegosfx.data;
-    opens org.example.gestorjuegosfx.data to javafx.fxml;
+    exports org.example.gestorjuegosfx.common;
+    opens org.example.gestorjuegosfx.common to javafx.fxml;
+    exports org.example.gestorjuegosfx.utils;
+    opens org.example.gestorjuegosfx.utils to javafx.fxml;
 }

@@ -1,6 +1,6 @@
 package org.example.gestorjuegosfx.user;
 
-import org.example.gestorjuegosfx.data.DAO;
+import org.example.gestorjuegosfx.common.DAO;
 
 import javax.sql.DataSource;
 import java.sql.*;
