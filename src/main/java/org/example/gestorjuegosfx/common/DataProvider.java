@@ -16,7 +16,7 @@ public class DataProvider {
             var ds = new MysqlDataSource();
             ds.setURL("jdbc:mysql://localhost:3306/ad");
             ds.setUser("root");
-            ds.setPassword("root");
+            ds.setPassword("pass");
             try {
                 ds.setAllowMultiQueries(true); // es necesario para DataInitializer
             } catch (SQLException e) {

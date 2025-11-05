@@ -39,13 +39,12 @@ public class GameDAO implements DAO<Game> {
         try(Connection conn = dataSource.getConnection();
             PreparedStatement pst = conn.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
         ){
-            pst.setInt(1, game.getId());
-            pst.setString(2, game.toString());
-            pst.setString(3, game.getPlatform());
-            pst.setInt(4, game.getYear());
-            pst.setString(5, game.getDescription());
-            pst.setInt(6, game.getUser_id());
-            pst.setString(7, game.getImage_url());
+            pst.setString(1, game.getTitle());
+            pst.setString(2, game.getPlatform());
+            pst.setInt(3, game.getYear());
+            pst.setString(4, game.getDescription());
+            pst.setInt(5, game.getUser_id());
+            pst.setString(6, game.getImage_url());
 
             Integer res = pst.executeUpdate();
             if(res>0){

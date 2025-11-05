@@ -9,6 +9,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.example.gestorjuegosfx.game.Game;
@@ -62,6 +64,8 @@ public class MainController implements Initializable {
     private TextField txtTitle;
 
     private ObservableList<User> datos = FXCollections.observableArrayList();
+    @javafx.fxml.FXML
+    private ImageView cover;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -96,6 +100,7 @@ public class MainController implements Initializable {
                txtImage.setText(newValue.getImage_url());
                spinUser.getValueFactory().setValue(newValue.getUser_id());
                spinYear.getValueFactory().setValue(newValue.getYear());
+               //cover.setImage( new Image("file:covers/"+newValue.getImage_url()));
            }
         });
 
@@ -122,6 +127,7 @@ public class MainController implements Initializable {
         game.setYear(spinYear.getValue());
         game.setUser_id(spinUser.getValue());
         game.setPlatform(txtPlataforma.getText());
+        game.setImage_url(txtImage.getText());
 
         var newGame = gameDAO.save(game);
         if(newGame.isPresent()){
