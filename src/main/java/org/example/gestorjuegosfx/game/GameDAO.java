@@ -82,6 +82,7 @@ public class GameDAO implements DAO<Game> {
     }
 
     public List<Game> findAllByUserId(Integer id) {
+
         ArrayList<Game> listado = new ArrayList<>();
         String sql = "SELECT * FROM games WHERE user_id = ?";
         try(Connection conn = dataSource.getConnection();

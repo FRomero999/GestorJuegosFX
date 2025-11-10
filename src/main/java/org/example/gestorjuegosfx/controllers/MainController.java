@@ -100,7 +100,12 @@ public class MainController implements Initializable {
                txtImage.setText(newValue.getImage_url());
                spinUser.getValueFactory().setValue(newValue.getUser_id());
                spinYear.getValueFactory().setValue(newValue.getYear());
-               //cover.setImage( new Image("file:covers/"+newValue.getImage_url()));
+
+               Image im = new Image("file:covers/"+newValue.getImage_url());
+               if(im.isError()){
+                   im = new Image(getClass().getResource("/images/placeholder.png").toString());
+               }
+               cover.setImage(im);
            }
         });
 
