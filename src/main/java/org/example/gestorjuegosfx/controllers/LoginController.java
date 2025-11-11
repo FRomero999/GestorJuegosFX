@@ -54,10 +54,13 @@ public class LoginController implements Initializable {
 
         if(authService.login(txtCorreo.getText(),txtContraseña.getText()).isPresent()){
             lblInfo.setText("Acceso correcto");
+            lblInfo.getStyleClass().clear();
+            lblInfo.setStyle("-fx-text-fill: green");
             JavaFXUtil.showModal(Alert.AlertType.INFORMATION,"Bienvenido",null,"Bienvenido a la aplicación");
             MainController mainController = JavaFXUtil.setScene("/org/example/gestorjuegosfx/main-view.fxml");
         } else{
             lblInfo.setText("Error en el acceso");
+            lblInfo.getStyleClass().add("error");
             txtCorreo.clear();
             txtContraseña.clear();
         }

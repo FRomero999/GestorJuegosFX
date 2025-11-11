@@ -6,6 +6,8 @@ module org.example.gestorjuegosfx {
     requires mysql.connector.j;
     requires java.naming;
     requires javafx.graphics;
+    requires java.desktop;
+    requires javafx.media;
 
     opens org.example.gestorjuegosfx to javafx.fxml;
     exports org.example.gestorjuegosfx;

@@ -12,3 +12,8 @@
 .label.formulario{
     -fx-text-fill: blue;
 }
+
+.label.error{
+    -fx-text-fill: red;
+    -fx-font-size: 30px;
+}

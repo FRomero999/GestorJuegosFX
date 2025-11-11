@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="360.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestorjuegosfx.controllers.LoginController">
+<BorderPane prefHeight="360.0" prefWidth="320.0" stylesheets="@../../../style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gestorjuegosfx.controllers.LoginController">
    <center>
       <VBox alignment="CENTER" spacing="20.0">
           <padding>

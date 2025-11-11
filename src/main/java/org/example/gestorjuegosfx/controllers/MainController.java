@@ -11,6 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.example.gestorjuegosfx.game.Game;
@@ -67,6 +70,15 @@ public class MainController implements Initializable {
     @javafx.fxml.FXML
     private ImageView cover;
 
+    private AudioClip clapAudio;
+    private AudioClip fondo = new AudioClip(getClass().getResource("/audio/chiptune-loop.wav").toString());
+    private MediaPlayer  player;
+
+    @javafx.fxml.FXML
+    private ToggleButton btnMute;
+    @javafx.fxml.FXML
+    private Slider volumenSlider;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -92,25 +104,53 @@ public class MainController implements Initializable {
         spinYear.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1970, 2025,2025,1));
 
         table.getSelectionModel().selectedItemProperty().addListener((observable,oldValue,newValue)->{
-           if(newValue!=null){
-               txtTitle.setText(newValue.getTitle());
-               txtDescription.setText(newValue.getDescription());
-               lblId.setText(newValue.getId().toString());
-               txtPlataforma.setText(newValue.getPlatform());
-               txtImage.setText(newValue.getImage_url());
-               spinUser.getValueFactory().setValue(newValue.getUser_id());
-               spinYear.getValueFactory().setValue(newValue.getYear());
-
-               Image im = new Image("file:covers/"+newValue.getImage_url());
-               if(im.isError()){
-                   im = new Image(getClass().getResource("/images/placeholder.png").toString());
-               }
-               cover.setImage(im);
-           }
+           if(newValue!=null) showDataInForm(newValue);
         });
+
+        btnMute.selectedProperty().addListener((observable,oldValue,newValue)->{
+            if(btnMute.isSelected()){
+                player.setMute(true);
+            }else {
+                player.setMute(false);
+            }
+        });
+
+        volumenSlider.valueProperty().addListener((observable,oldValue,newValue)->{
+            player.setVolume(volumenSlider.getValue()/100);
+        });
+
+        clapAudio = new AudioClip(getClass().getResource("/audio/clap13.wav").toString());
+
+        Media m = new Media(getClass().getResource("/audio/chiptune-loop.wav").toString());
+        player = new MediaPlayer(m);
+
+        player.setVolume(0.5);
+        player.setAutoPlay(true);
+        player.setCycleCount(MediaPlayer.INDEFINITE);
+        player.play();
+
+        //fondo.setCycleCount(AudioClip.INDEFINITE);
+        //fondo.play(0.5);
 
         refreshTable();
 
+    }
+
+    private void showDataInForm(Game newValue) {
+        txtTitle.setText(newValue.getTitle());
+        txtDescription.setText(newValue.getDescription());
+        lblId.setText(newValue.getId().toString());
+        txtPlataforma.setText(newValue.getPlatform());
+        txtImage.setText(newValue.getImage_url());
+        spinUser.getValueFactory().setValue(newValue.getUser_id());
+        spinYear.getValueFactory().setValue(newValue.getYear());
+
+        Image im = new Image("file:covers/"+ newValue.getImage_url());
+        if(im.isError()){
+            im = new Image(getClass().getResource("/images/placeholder.png").toString());
+        }
+        cover.setImage(im);
+        clapAudio.play();
     }
 
     private void refreshTable() {
