@@ -78,6 +78,10 @@ public class MainController implements Initializable {
     private ToggleButton btnMute;
     @javafx.fxml.FXML
     private Slider volumenSlider;
+    @javafx.fxml.FXML
+    private Slider sliderRate;
+    @javafx.fxml.FXML
+    private Label lblEcho;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -119,10 +123,14 @@ public class MainController implements Initializable {
             player.setVolume(volumenSlider.getValue()/100);
         });
 
+        lblEcho.textProperty().bindBidirectional(txtTitle.textProperty());
+
         clapAudio = new AudioClip(getClass().getResource("/audio/clap13.wav").toString());
 
         Media m = new Media(getClass().getResource("/audio/chiptune-loop.wav").toString());
         player = new MediaPlayer(m);
+
+        player.rateProperty().bindBidirectional(sliderRate.valueProperty());
 
         player.setVolume(0.5);
         player.setAutoPlay(true);
